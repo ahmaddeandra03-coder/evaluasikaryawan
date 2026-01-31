@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AHA Commerce - Evaluasi HRD</title>
+    <style>
+        body {
+            margin: 0; font-family: 'Inter', sans-serif;
+            background: url('image.png') no-repeat center center fixed;
+            background-size: cover; min-height: 100vh;
+            display: flex; justify-content: center; align-items: center;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(15px);
+            padding: 30px; border-radius: 25px; width: 90%; max-width: 400px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2); text-align: center;
+        }
+        input { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #ddd; margin: 15px 0; box-sizing: border-box; }
+        .hrd-info { background: #0056b3; color: white; padding: 15px; border-radius: 12px; margin-top: 20px; display: none; }
+        .chart-container { margin-top: 20px; display: none; }
+        .bar-wrapper { display: flex; align-items: flex-end; justify-content: space-around; height: 120px; border-bottom: 2px solid #333; padding-bottom: 5px; }
+        .bar { width: 15%; background: #28a745; transition: height 0.8s ease; border-radius: 4px 4px 0 0; }
+        .month-labels { display: flex; justify-content: space-around; font-size: 0.7rem; margin-top: 8px; font-weight: bold; }
+        .status-badge { display: inline-block; padding: 5px 10px; border-radius: 20px; font-size: 0.7rem; margin-top: 10px; color: white; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>AHA Commerce</h2>
+    <p style="font-size: 0.8rem; color: #555;">Draf Evaluasi Kinerja</p>
+    
+    <input type="text" id="inputNama" placeholder="Ketik SYAKIRA atau AHMAD..." onkeyup="prosesEvaluasi()">
+
+    <div id="displayArea">
+        <div id="hrdDetail" class="hrd-info">
+            <span style="font-size: 0.7rem; opacity: 0.8;">HRD PENDAMPING:</span><br>
+            <strong id="txtHRD" style="font-size: 1.1rem;"></strong>
+            <div id="badgeTren" class="status-badge"></div>
+        </div>
+
+        <div id="chartArea" class="chart-container">
+            <p style="font-size: 0.8rem; margin-bottom: 10px;"><b>Tren Kemampuan (Skala 1-100)</b></p>
+            <div class="bar-wrapper">
+                <div id="bar1" class="bar" title="Bulan 1"></div>
+                <div id="bar2" class="bar" title="Bulan 2"></div>
+                <div id="bar3" class="bar" title="Bulan 3"></div>
+                <div id="bar4" class="bar" title="Bulan 4"></div>
+            </div>
+            <div class="month-labels">
+                <span>Okt</span><span>Nov</span><span>Des</span><span>Jan</span>
+            </div>
+            <p id="kesimpulan" style="font-size: 0.75rem; margin-top: 15px; font-style: italic;"></p>
+        </div>
+    </div>
+</div>
+
+<script>
+    function prosesEvaluasi() {
+        const input = document.getElementById('inputNama').value.toUpperCase();
+        const hrdBox = document.getElementById('hrdDetail');
+        const chartBox = document.getElementById('chartArea');
+        const txtHRD = document.getElementById('txtHRD');
+        const badge = document.getElementById('badgeTren');
+        const kesimpulan = document.getElementById('kesimpulan');
+
+        // Data Simulasi Performa (Bahan Referensi Ka Qhisti)
+        const dataKaryawan = {
+            "SYAKIRA": { hrd: "Muliyadin", skor: [70, 75, 82, 90], tren: "Meningkat" },
+            "AHMAD": { hrd: "Manzilina Qhistina", skor: [88, 85, 80, 78], tren: "Menurun" }
+        };
+
+        let found = false;
+        for (let key in dataKaryawan) {
+            if (input.includes(key)) {
+                const d = dataKaryawan[key];
+                txtHRD.innerText = d.hrd;
+                badge.innerText = "TREN: " + d.tren;
+                badge.style.backgroundColor = d.tren === "Meningkat" ? "#28a745" : "#dc3545";
+                
+                // Update Grafik
+                document.getElementById('bar1').style.height = d.skor[0] + '%';
+                document.getElementById('bar2').style.height = d.skor[1] + '%';
+                document.getElementById('bar3').style.height = d.skor[2] + '%';
+                document.getElementById('bar4').style.height = d.skor[3] + '%';
+
+                kesimpulan.innerText = d.tren === "Meningkat" 
+                    ? "Karyawan menunjukkan progres positif yang konsisten." 
+                    : "Perlu bimbingan tambahan untuk mengembalikan performa.";
+
+                hrdBox.style.display = 'block';
+                chartBox.style.display = 'block';
+                found = true; break;
+            }
+        }
+
+        if (!found) { hrdBox.style.display = 'none'; chartBox.style.display = 'none'; }
+    }
+</script>
+
+</body>
+</html>
